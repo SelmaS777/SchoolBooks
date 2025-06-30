@@ -1,0 +1,4729 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "SchoolBooks API",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://schoo-api.onrender.com/api",
+            "description": "API Server"
+        },
+        {
+            "url": "http://localhost:8081/api",
+            "description": "API Server"
+        }
+    ],
+    "paths": {
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "User login",
+                "operationId": "8cb7742ae98d0990acb2907c4e00bf24",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "test@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "type": "string"
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "bearer"
+                                        },
+                                        "expires_in": {
+                                            "type": "integer",
+                                            "example": 3600
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized (Invalid Credentials)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "User registration",
+                "operationId": "ed42f392010c301892e640067141676e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "fullName",
+                                    "password",
+                                    "email"
+                                ],
+                                "properties": {
+                                    "fullName": {
+                                        "type": "string",
+                                        "example": "Test User"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Password123!"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Password123!"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "test@example.com"
+                                    },
+                                    "phoneNumber": {
+                                        "type": "string",
+                                        "format": "phone",
+                                        "example": "+1234567890",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Registration successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "user": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Registration failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/me": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Get the authenticated User with relationships",
+                "operationId": "a9c495788506b114956e3f509e5d90a2",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Log the user out (Invalidate the token)",
+                "operationId": "0d29c740dc06d77602af8095bf4654cc",
+                "responses": {
+                    "200": {
+                        "description": "Successfully logged out",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/refresh": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Refresh a token",
+                "operationId": "f6c9683ed975ace7d035a09e6e2a9332",
+                "responses": {
+                    "200": {
+                        "description": "Token refreshed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "type": "string"
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "bearer"
+                                        },
+                                        "expires_in": {
+                                            "type": "integer",
+                                            "example": 3600
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/validateToken": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Validate user token",
+                "operationId": "dd8a5469f450b623cfe1ea92eae82d15",
+                "responses": {
+                    "200": {
+                        "description": "Token is valid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Token validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/forgot-password": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Send password reset email",
+                "operationId": "b13d5efc90e1de6d4e9900240fce9b4d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Reset link sent successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "We have emailed your password reset link!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/reset-password": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Reset password with token",
+                "operationId": "bbf02faac4cfbb998aad2b63a843b88c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "token",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "type": "string",
+                                        "example": "abc123..."
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "NewPassword123!"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "NewPassword123!"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password reset successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Your password has been reset!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid or expired token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/test-email": {
+            "post": {
+                "tags": [
+                    "Testing"
+                ],
+                "summary": "Test email functionality",
+                "description": "Send a test email to verify Mailgun configuration",
+                "operationId": "6d8decb54637d48dd1207620d4be9754",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "test@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Test email sent successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Test email sent successfully!"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "example": "test@example.com"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "abc123..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Email sending failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/credit-cards": {
+            "get": {
+                "tags": [
+                    "Credit Cards"
+                ],
+                "summary": "Get all credit cards for authenticated user",
+                "operationId": "6b2139a58ce8c78ee8d68bf759502376",
+                "responses": {
+                    "200": {
+                        "description": "List of user's credit cards",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Card"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Credit Cards"
+                ],
+                "summary": "Add a new credit card",
+                "operationId": "dbef7d0910339eab412da73da768a323",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "card_number": {
+                                        "type": "string",
+                                        "example": "4242424242424242"
+                                    },
+                                    "cardholder_name": {
+                                        "type": "string",
+                                        "example": "John Smith"
+                                    },
+                                    "expiry_month": {
+                                        "type": "string",
+                                        "example": "12"
+                                    },
+                                    "expiry_year": {
+                                        "type": "string",
+                                        "example": "2025"
+                                    },
+                                    "cvv": {
+                                        "type": "string",
+                                        "example": "123"
+                                    },
+                                    "is_default": {
+                                        "type": "boolean",
+                                        "example": "true"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Credit card added successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Card"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/credit-cards/{id}": {
+            "get": {
+                "tags": [
+                    "Credit Cards"
+                ],
+                "summary": "Get a specific credit card",
+                "operationId": "f7a239f040c25673b9ca07ddbfcd0f31",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Credit Card ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Credit card details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Card"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Credit card not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Credit Cards"
+                ],
+                "summary": "Update credit card details",
+                "operationId": "9bf0ca131478c99bb202ffb375f40722",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Credit Card ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "cardholder_name": {
+                                        "type": "string",
+                                        "example": "Jane Smith"
+                                    },
+                                    "expiry_month": {
+                                        "type": "string",
+                                        "example": "11"
+                                    },
+                                    "expiry_year": {
+                                        "type": "string",
+                                        "example": "2026"
+                                    },
+                                    "is_default": {
+                                        "type": "boolean",
+                                        "example": "true"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Credit card updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Card"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Credit Cards"
+                ],
+                "summary": "Delete a credit card",
+                "operationId": "ba3b0012ab774adb254d908074e4f4f0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Credit Card ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Credit card deleted successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/credit-cards/{id}/make-default": {
+            "post": {
+                "tags": [
+                    "Credit Cards"
+                ],
+                "summary": "Set a credit card as default",
+                "operationId": "92cdd67bc419feb491e9d2caf9ce583c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Credit Card ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Card set as default successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Card"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/carts": {
+            "get": {
+                "tags": [
+                    "Carts"
+                ],
+                "summary": "Get user's cart items",
+                "description": "Returns current user's cart items with full product details",
+                "operationId": "bf4fcfa5c4963324af8f7c4709190694",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Cart"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/carts/add-product": {
+            "post": {
+                "tags": [
+                    "Carts"
+                ],
+                "summary": "Add product to cart",
+                "description": "Add a product to the current user's cart",
+                "operationId": "106078bb4afa849972a6178a382351b9",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "product_id"
+                                ],
+                                "properties": {
+                                    "product_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Product added to cart successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Cart"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found"
+                    },
+                    "400": {
+                        "description": "Product already in cart or validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/carts/remove-product/{product_id}": {
+            "delete": {
+                "tags": [
+                    "Carts"
+                ],
+                "summary": "Remove product from cart",
+                "description": "Remove a product from the current user's cart",
+                "operationId": "17cce8b6c31960b011eded3fb6798e04",
+                "parameters": [
+                    {
+                        "name": "product_id",
+                        "in": "path",
+                        "description": "ID of the product to remove",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product removed from cart successfully"
+                    },
+                    "404": {
+                        "description": "Product not found in cart"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/carts/clear": {
+            "delete": {
+                "tags": [
+                    "Carts"
+                ],
+                "summary": "Clear user's cart",
+                "description": "Remove all items from the current user's cart",
+                "operationId": "3f44b273f7599d2c330934f1a46aceef",
+                "responses": {
+                    "200": {
+                        "description": "Cart cleared successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/carts/count": {
+            "get": {
+                "tags": [
+                    "Carts"
+                ],
+                "summary": "Get cart items count",
+                "description": "Get the total number of items in the current user's cart",
+                "operationId": "02ba7bfd8247dbf128d744b7bb839d60",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "count": {
+                                            "type": "integer",
+                                            "example": "5"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/carts/{id}": {
+            "get": {
+                "tags": [
+                    "Carts"
+                ],
+                "summary": "Get specified cart item",
+                "description": "Returns specified cart item (only if it belongs to current user)",
+                "operationId": "2a3c77b10b2ac68693ab31bd63102a98",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the cart item",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Cart"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cart item not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/categories": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Get list of categories",
+                "description": "Returns list of categories",
+                "operationId": "ead5fb1cf2a7453acb2e37928a1b1eaf",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Category"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Create a new category",
+                "description": "Create a new category",
+                "operationId": "bb02f0320882db37f99574196577e446",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Category"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Category"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/categories/{id}": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Get specified category",
+                "description": "Returns specified category",
+                "operationId": "4cdf41756315109f1efc72787db5830a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the category",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Category"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Update specified category",
+                "description": "Update specified category",
+                "operationId": "19954b1f8aa4916b5f032dc28ea36a24",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the category",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Category"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Category"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Delete specified category",
+                "description": "Delete specified category",
+                "operationId": "f1b8af6e84bd52b9594d98bde748ebd6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the category",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/cities": {
+            "get": {
+                "tags": [
+                    "Cities"
+                ],
+                "summary": "Get all cities",
+                "operationId": "6c450a43d3a7ad6c5740b33397769d14",
+                "responses": {
+                    "200": {
+                        "description": "List of cities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/City"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Cities"
+                ],
+                "summary": "Create a new city",
+                "operationId": "863932768a96ed74c473d3b18f6da60e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/City"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "City created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/City"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/cities/{id}": {
+            "get": {
+                "tags": [
+                    "Cities"
+                ],
+                "summary": "Get a specific city",
+                "operationId": "8e4c912d45bee5a9582f95e8adb41876",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "City ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/City"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Cities"
+                ],
+                "summary": "Update a city",
+                "operationId": "6e197a78caf208243545929c88206fa2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "City ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/City"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "City updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/City"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Cities"
+                ],
+                "summary": "Delete a city",
+                "operationId": "b2ac0bc33d9e916928739ec686b4795d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "City ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "City deleted successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/all-cities": {
+            "get": {
+                "tags": [
+                    "Cities"
+                ],
+                "summary": "Get all cities for dropdowns",
+                "operationId": "bdf486212ae666f15c6ef2ef9019e964",
+                "responses": {
+                    "200": {
+                        "description": "All cities returned as key-value pairs",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "1": "Sarajevo",
+                                    "2": "Mostar",
+                                    "3": "Banja Luka"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/send-mail": {
+            "post": {
+                "tags": [
+                    "Mailer"
+                ],
+                "summary": "Send an email",
+                "description": "Send an email to the specified recipient.",
+                "operationId": "sendMail",
+                "requestBody": {
+                    "description": "Email details",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "to",
+                                    "subject",
+                                    "body"
+                                ],
+                                "properties": {
+                                    "to": {
+                                        "type": "string",
+                                        "example": "recipient@example.com"
+                                    },
+                                    "subject": {
+                                        "type": "string",
+                                        "example": "Subject of the email"
+                                    },
+                                    "body": {
+                                        "type": "string",
+                                        "example": "Body of the email"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Email sent successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email sent successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to send email",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Failed to send email."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/notifications": {
+            "get": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Get current user's notifications",
+                "description": "Returns list of notifications for the authenticated user",
+                "operationId": "0f031f66cd8c52bf73e89fb2d050ad83",
+                "parameters": [
+                    {
+                        "name": "unread_only",
+                        "in": "query",
+                        "description": "Filter to only unread notifications",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "notifications": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Notification"
+                                            }
+                                        },
+                                        "unread_count": {
+                                            "type": "integer",
+                                            "example": "5"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/notifications/{id}/mark-read": {
+            "post": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Mark a notification as read",
+                "description": "Mark a specific notification as read",
+                "operationId": "38dee7baa2af2ed52d0f6fd9a554087e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the notification",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Notification marked as read",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Notification marked as read"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/notifications/mark-all-read": {
+            "post": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Mark all notifications as read",
+                "description": "Mark all notifications for the authenticated user as read",
+                "operationId": "a493f8d75bc3e3762577bc933804c888",
+                "responses": {
+                    "200": {
+                        "description": "All notifications marked as read",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "All notifications marked as read"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/notifications/{id}": {
+            "get": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Get specified notification",
+                "description": "Returns specified notification",
+                "operationId": "0c8e017ab6d765f82f97368b80f52b8e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the notification",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Notification"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Delete specified notification",
+                "description": "Delete specified notification",
+                "operationId": "ccdcc730b2088097dd94128f24960dbf",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the notification",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/orders": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get user's orders (as buyer or seller)",
+                "operationId": "325fd3d55bbe9bb39645269928fa4983",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Create a purchase order",
+                "operationId": "445bab4f7dc9ea6fcd54f286c0209478",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "product_id",
+                                    "shipping_address"
+                                ],
+                                "properties": {
+                                    "product_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "shipping_address": {
+                                        "type": "string",
+                                        "example": "123 Main St"
+                                    },
+                                    "payment_method": {
+                                        "type": "string",
+                                        "enum": [
+                                            "credit_card",
+                                            "debit_card",
+                                            "cash_on_delivery"
+                                        ],
+                                        "example": "credit_card"
+                                    },
+                                    "card_id": {
+                                        "description": "ID of saved card (alternative to card details)",
+                                        "type": "integer",
+                                        "example": "1",
+                                        "nullable": true
+                                    },
+                                    "card_number": {
+                                        "description": "Card number for new card",
+                                        "type": "string",
+                                        "example": "4242424242424242",
+                                        "nullable": true
+                                    },
+                                    "expiry_month": {
+                                        "description": "Card expiry month",
+                                        "type": "string",
+                                        "example": "12",
+                                        "nullable": true
+                                    },
+                                    "expiry_year": {
+                                        "description": "Card expiry year",
+                                        "type": "string",
+                                        "example": "2025",
+                                        "nullable": true
+                                    },
+                                    "cvv": {
+                                        "description": "Card CVV",
+                                        "type": "string",
+                                        "example": "123",
+                                        "nullable": true
+                                    },
+                                    "cardholder_name": {
+                                        "description": "Name on card",
+                                        "type": "string",
+                                        "example": "John Doe",
+                                        "nullable": true
+                                    },
+                                    "save_card": {
+                                        "description": "Save card for future use",
+                                        "type": "boolean",
+                                        "example": true,
+                                        "nullable": true
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "example": "Handle with care",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Order created successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/orders/{id}/accept": {
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Accept an order (seller only)",
+                "operationId": "b3a357708eabb9e5503d1954d46879b1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order accepted"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/orders/{id}/reject": {
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Reject an order (seller only)",
+                "operationId": "deabf58b02d0a4024d6eb737245ca31f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order rejected"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/orders/{id}/ship": {
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Mark order as shipped (seller only)",
+                "operationId": "e63bdc3f587e53f0805f386c15881787",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order shipped"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/orders/{id}/complete": {
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Complete an order (buyer confirms receipt)",
+                "operationId": "01ef97ed80325296d58ed49d1594f3d4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order completed"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/payments": {
+            "get": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Get list of payments",
+                "description": "Returns list of payments",
+                "operationId": "65567ad73dd4b0cc01c4856a6bb7e600",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Payment"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Create a new payment",
+                "description": "Create a new payment",
+                "operationId": "3cb7bc2c2ad5498b4ad9521811750cc1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Payment"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Payment"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/payments/{id}": {
+            "get": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Get specified payment",
+                "description": "Returns specified payment",
+                "operationId": "a4207c19fecbebc99932a8348b19adf1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the payment",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Payment"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Update specified payment",
+                "description": "Update specified payment",
+                "operationId": "7f3042f886092282c90cf678fa8b0d78",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the payment",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Payment"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Payment"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Delete specified payment",
+                "description": "Delete specified payment",
+                "operationId": "6ee6ad54e3a047f39a06ffcb4cfc6b7a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the payment",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/products": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get list of products with filtering, sorting options and pagination",
+                "description": "Returns paginated list of products. Default shows only products for sale.",
+                "operationId": "c1ff6f862214e1896c59cfe0491ce0e8",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search term for product name, description or author",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "category_id",
+                        "in": "query",
+                        "description": "Filter products by category ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "min_price",
+                        "in": "query",
+                        "description": "Minimum price filter",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    },
+                    {
+                        "name": "max_price",
+                        "in": "query",
+                        "description": "Maximum price filter",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filter products by status (default: selling)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "selling",
+                                "sold",
+                                "bought",
+                                "all"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "seller_id",
+                        "in": "query",
+                        "description": "Filter products by seller ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "city_id",
+                        "in": "query",
+                        "description": "Filter products by seller's city ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "buyer_id",
+                        "in": "query",
+                        "description": "Filter products by buyer ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sort_price",
+                        "in": "query",
+                        "description": "Sort direction by price (asc or desc)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "current_page": {
+                                            "type": "integer"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Product"
+                                            }
+                                        },
+                                        "total": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Create a new product",
+                "description": "Create a new product (tier restrictions apply)",
+                "operationId": "399770d33fa4672f1216707d0e236763",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Product"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Tier limit reached or insufficient permissions"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/products/{id}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get specified product",
+                "description": "Returns specified product with relationships",
+                "operationId": "b46f4aa73232d0368eee698a082342a4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the product",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Update specified product",
+                "description": "Update specified product",
+                "operationId": "1419d479f9340e30e67fe21a2ca525b7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the product",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Product"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Delete specified product",
+                "description": "Delete specified product",
+                "operationId": "fe34b364a3f192305598b65d04d06b5d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the product",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/reviews": {
+            "get": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Get list of reviews",
+                "description": "Returns list of reviews",
+                "operationId": "a0d00e73ae8bc8abf7a182a3bcc3e145",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Review"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Create a new review",
+                "description": "Create a new review",
+                "operationId": "9fe745d363761b681b0e4f1d129e2456",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Review"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Review"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/reviews/{id}": {
+            "get": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Get specified review",
+                "description": "Returns specified review",
+                "operationId": "59c58623cd284fa1d22b01b6eaa87729",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the review",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Review"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Update specified review",
+                "description": "Update specified review",
+                "operationId": "aab08b97bf5c417a4ae9061ecddf416c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the review",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Review"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Review"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Delete specified review",
+                "description": "Delete specified review",
+                "operationId": "27b37ca28fa012ce66153cad66bedfc9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the review",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/saved-searches": {
+            "get": {
+                "tags": [
+                    "SavedSearches"
+                ],
+                "summary": "Get user's saved searches",
+                "description": "Returns current user's saved search queries",
+                "operationId": "cebb1a91a448ea0d4a183f21481556ab",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SavedSearch"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "SavedSearches"
+                ],
+                "summary": "Save a search query",
+                "description": "Save a search query for the current user",
+                "operationId": "153b18693c8e64c7ba01169c4c168c11",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "search_query"
+                                ],
+                                "properties": {
+                                    "search_query": {
+                                        "type": "string",
+                                        "example": "javascript programming"
+                                    },
+                                    "search_name": {
+                                        "type": "string",
+                                        "example": "Programming Books",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Search saved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SavedSearch"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Search already saved or validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/saved-searches/{id}": {
+            "get": {
+                "tags": [
+                    "SavedSearches"
+                ],
+                "summary": "Get specified saved search",
+                "description": "Returns specified saved search (only if it belongs to current user)",
+                "operationId": "13aab65b6ed07ce12b1d73c1e0d778e2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the saved search",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SavedSearch"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Saved search not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "SavedSearches"
+                ],
+                "summary": "Update saved search",
+                "description": "Update a saved search name (only if it belongs to current user)",
+                "operationId": "b853a3b4a883cd588ec1b0bdfd08a4e4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the saved search",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "search_name": {
+                                        "type": "string",
+                                        "example": "Updated Search Name"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Search updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SavedSearch"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Saved search not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "SavedSearches"
+                ],
+                "summary": "Delete saved search",
+                "description": "Delete a saved search (only if it belongs to current user)",
+                "operationId": "0e588be22905d069effe5b6501ed2624",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the saved search",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Search deleted successfully"
+                    },
+                    "404": {
+                        "description": "Saved search not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/saved-searches/clear": {
+            "delete": {
+                "tags": [
+                    "SavedSearches"
+                ],
+                "summary": "Clear all saved searches",
+                "description": "Remove all saved searches for the current user",
+                "operationId": "9f18838d4ec7f6c3f4bf4f389cd5a657",
+                "responses": {
+                    "200": {
+                        "description": "All saved searches cleared successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/saved-searches/count": {
+            "get": {
+                "tags": [
+                    "SavedSearches"
+                ],
+                "summary": "Get saved searches count",
+                "description": "Get the total number of saved searches for the current user",
+                "operationId": "ed1b85e07b77af8ba13e3e3be6f527fb",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "count": {
+                                            "type": "integer",
+                                            "example": "5"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/states": {
+            "get": {
+                "tags": [
+                    "States"
+                ],
+                "summary": "Get all book states",
+                "operationId": "354866f7fb7672984a7f789447ebcd29",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/State"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "States"
+                ],
+                "summary": "Create a new book state",
+                "operationId": "3a320d9021a1c0341e6fe95fe73609c3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/State"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Book state created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/State"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/states/{id}": {
+            "get": {
+                "tags": [
+                    "States"
+                ],
+                "summary": "Get a specific book state",
+                "operationId": "5234c61f55535022a51fb3b39063f093",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "State ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/State"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "State not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "States"
+                ],
+                "summary": "Update a book state",
+                "operationId": "3cfd6729ea9e6bea7ff87509552b9be6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "State ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/State"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "State updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/State"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "State not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "States"
+                ],
+                "summary": "Delete a book state",
+                "operationId": "5f80fbb5ef25abf3c2134cb8a79a428a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "State ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "State deleted successfully"
+                    },
+                    "404": {
+                        "description": "State not found"
+                    }
+                }
+            }
+        },
+        "/all-states": {
+            "get": {
+                "tags": [
+                    "States"
+                ],
+                "summary": "Get all book states for dropdowns",
+                "operationId": "94149f89ee724677883fbac7105e92d1",
+                "responses": {
+                    "200": {
+                        "description": "All states returned as key-value pairs",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "1": "Good",
+                                    "2": "Very Good",
+                                    "3": "Excellent"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/test-notification": {
+            "post": {
+                "tags": [
+                    "Testing"
+                ],
+                "summary": "Test notification broadcasting",
+                "description": "Send a test notification to the authenticated user via Pusher",
+                "operationId": "a00601317ce5cdd51368d675c0b3d294",
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "message": {
+                                        "description": "Optional custom message for the notification",
+                                        "type": "string",
+                                        "example": "Custom test message"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Notification sent successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Notification sent successfully"
+                                        },
+                                        "user_id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "notification_message": {
+                                            "type": "string",
+                                            "example": "Test notification"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/tiers": {
+            "get": {
+                "tags": [
+                    "Tiers"
+                ],
+                "summary": "Get all tiers",
+                "operationId": "d66c7926e40713ac8b4df3d0a73fced4",
+                "responses": {
+                    "200": {
+                        "description": "List of tiers",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Tier"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tiers/{id}": {
+            "get": {
+                "tags": [
+                    "Tiers"
+                ],
+                "summary": "Get a specific tier",
+                "operationId": "dda9bfcbf668aaff79123de0aef332cb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Tier ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Tier"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/all-tiers": {
+            "get": {
+                "tags": [
+                    "Tiers"
+                ],
+                "summary": "Get all tiers for dropdowns",
+                "operationId": "ffce353828344cfb8ee540efc04a9db7",
+                "responses": {
+                    "200": {
+                        "description": "All tiers returned as key-value pairs",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "1": "Basic",
+                                    "2": "Standard",
+                                    "3": "Premium"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get all users",
+                "operationId": "7e2f5799553ec93c9c43e2a58490d447",
+                "responses": {
+                    "200": {
+                        "description": "List of users",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/User"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Create a new user",
+                "operationId": "a1fce870c566eb5fc0cf3178ec5d2fed",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/users/{id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get a specific user",
+                "operationId": "910a0c7cf580e1c605648d82a4e57f46",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update a specific user",
+                "operationId": "ddfe232db1870b82493bf8bd25596d37",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Delete a specific user",
+                "operationId": "43dd20becb1f47444e484cbb18ce345c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "User deleted successfully"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/users/{id}/selling-products": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get products listed for sale by a specific user",
+                "operationId": "893d0d84b4f68285976e9a958bc8e390",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of products for sale by user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Product"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/users/{id}/bought-products": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get products bought by a specific user",
+                "operationId": "51c7cded2425adc6e03cd27258a005b6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of products bought by user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Product"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/users/{id}/sold-products": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get products that have been sold by a specific user",
+                "operationId": "9e1756c06c039585c79ac4afc0df6717",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of products sold by user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Product"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/profile": {
+            "put": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Update authenticated user's profile",
+                "description": "Allows users to update their own profile information",
+                "operationId": "423b0a7d6bc9e3f8dd9fe56b2909cc27",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "full_name": {
+                                        "type": "string",
+                                        "example": "John Smith"
+                                    },
+                                    "phone_number": {
+                                        "type": "string",
+                                        "example": "+38761234567"
+                                    },
+                                    "city_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "personal_details": {
+                                        "type": "string",
+                                        "example": "Some additional information about me"
+                                    },
+                                    "image_url": {
+                                        "type": "string",
+                                        "example": "https://example.com/profile.jpg"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profile updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/users/{id}/tier": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update user's subscription tier",
+                "operationId": "de70ddab6c89958721dda97ab1dbcd68",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "tier_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Tier updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/profile/tier": {
+            "put": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Update authenticated user's subscription tier",
+                "operationId": "e697ac8ffb265214ca040f63b55a6d7d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "tier_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Tier updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/profile/listing-status": {
+            "get": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Get current user's listing status and tier limits",
+                "operationId": "8364b84274efa1a97f3bae3e188ea647",
+                "responses": {
+                    "200": {
+                        "description": "Listing status information",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "tier_name": {
+                                            "type": "string",
+                                            "example": "Premium"
+                                        },
+                                        "max_listings": {
+                                            "type": "integer",
+                                            "example": 20
+                                        },
+                                        "current_listings": {
+                                            "type": "integer",
+                                            "example": 5
+                                        },
+                                        "remaining_listings": {
+                                            "type": "integer",
+                                            "example": 15
+                                        },
+                                        "can_post": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/wishlist": {
+            "get": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "Get user's wishlist items",
+                "description": "Returns current user's wishlist items with full product details",
+                "operationId": "716344800c279861c61bfee7c75d624d",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Wishlist"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/wishlist/add-product": {
+            "post": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "Add product to wishlist",
+                "description": "Add a product to the current user's wishlist",
+                "operationId": "cb8756f796670709bca3f7b5ef0f8746",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "product_id"
+                                ],
+                                "properties": {
+                                    "product_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Product added to wishlist successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Wishlist"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found"
+                    },
+                    "400": {
+                        "description": "Product already in wishlist or validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/wishlist/remove-product/{product_id}": {
+            "delete": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "Remove product from wishlist",
+                "description": "Remove a product from the current user's wishlist",
+                "operationId": "28b3653ebb088b376280f7c179b4dda8",
+                "parameters": [
+                    {
+                        "name": "product_id",
+                        "in": "path",
+                        "description": "ID of the product to remove",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product removed from wishlist successfully"
+                    },
+                    "404": {
+                        "description": "Product not found in wishlist"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/wishlist/clear": {
+            "delete": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "Clear user's wishlist",
+                "description": "Remove all items from the current user's wishlist",
+                "operationId": "2a97b8f037b7ae56bfc12f0acbf1a9b2",
+                "responses": {
+                    "200": {
+                        "description": "Wishlist cleared successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/wishlist/count": {
+            "get": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "Get wishlist items count",
+                "description": "Get the total number of items in the current user's wishlist",
+                "operationId": "3ae10d2cd6653376a20207524753df02",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "count": {
+                                            "type": "integer",
+                                            "example": "5"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/wishlist/{id}": {
+            "get": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "Get specified wishlist item",
+                "description": "Returns specified wishlist item (only if it belongs to current user)",
+                "operationId": "74ea2848ee0ce4f468672f8a8faa4121",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the wishlist item",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Wishlist"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Wishlist item not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Card": {
+                "title": "CreditCard",
+                "description": "Credit Card model for user payment methods",
+                "properties": {
+                    "id": {
+                        "description": "Unique identifier for the credit card",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "user_id": {
+                        "description": "ID of user who owns this card",
+                        "type": "integer",
+                        "example": "5"
+                    },
+                    "card_type": {
+                        "description": "Type of credit card",
+                        "type": "string",
+                        "example": "Visa"
+                    },
+                    "last_four": {
+                        "description": "Last four digits of the card number",
+                        "type": "string",
+                        "example": "4242"
+                    },
+                    "cardholder_name": {
+                        "description": "Name on the credit card",
+                        "type": "string",
+                        "example": "John Smith"
+                    },
+                    "expiry_month": {
+                        "description": "Expiration month",
+                        "type": "string",
+                        "example": "12"
+                    },
+                    "expiry_year": {
+                        "description": "Expiration year",
+                        "type": "string",
+                        "example": "2025"
+                    },
+                    "is_default": {
+                        "description": "Whether this is the default payment method",
+                        "type": "boolean",
+                        "example": "true"
+                    },
+                    "created_at": {
+                        "description": "Date and time when the card was added",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Date and time when the card was last updated",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Cart": {
+                "title": "Cart",
+                "description": "Cart model",
+                "properties": {
+                    "id": {
+                        "description": "Unique identifier for the cart item",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "user_id": {
+                        "description": "User ID associated with the cart item",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "product_id": {
+                        "description": "Product ID associated with the cart item",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "quantity": {
+                        "description": "Quantity of the product in the cart",
+                        "type": "integer",
+                        "example": "2"
+                    },
+                    "created_at": {
+                        "description": "Date and time when the cart item was created",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-05-12 10:00:00"
+                    },
+                    "updated_at": {
+                        "description": "Date and time when the cart item was last updated",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-05-12 10:30:00"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "product": {
+                        "$ref": "#/components/schemas/Product"
+                    }
+                },
+                "type": "object"
+            },
+            "Category": {
+                "title": "Category",
+                "description": "Category model",
+                "properties": {
+                    "id": {
+                        "description": "Unique identifier for the category",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "name": {
+                        "description": "Name of the category",
+                        "type": "string",
+                        "example": "Electronics"
+                    },
+                    "description": {
+                        "description": "Description of the category",
+                        "type": "string",
+                        "example": "Products related to electronics."
+                    },
+                    "created_at": {
+                        "description": "Date and time when the category was created",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-05-12 09:00:00"
+                    },
+                    "updated_at": {
+                        "description": "Date and time when the category was last updated",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-05-12 09:30:00"
+                    },
+                    "products": {
+                        "description": "Products associated with the category",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Product"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "City": {
+                "title": "City",
+                "description": "City model",
+                "properties": {
+                    "id": {
+                        "description": "Unique identifier for the city",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "name": {
+                        "description": "Name of the city",
+                        "type": "string",
+                        "example": "Sarajevo"
+                    },
+                    "created_at": {
+                        "description": "Date and time when the city was created",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-05-12 09:00:00"
+                    },
+                    "updated_at": {
+                        "description": "Date and time when the city was last updated",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-05-12 09:30:00"
+                    }
+                },
+                "type": "object"
+            },
+            "Notification": {
+                "title": "Notification",
+                "description": "Notification model",
+                "properties": {
+                    "id": {
+                        "description": "Unique identifier for the notification",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "user_id": {
+                        "description": "User ID associated with the notification",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "message": {
+                        "description": "Content of the notification",
+                        "type": "string",
+                        "example": "You have a new message."
+                    },
+                    "notification_type": {
+                        "description": "Type of the notification",
+                        "type": "string",
+                        "example": "order_created"
+                    },
+                    "is_read": {
+                        "description": "Whether the notification has been read",
+                        "type": "boolean",
+                        "example": "false"
+                    },
+                    "order_id": {
+                        "description": "Related order ID",
+                        "type": "integer",
+                        "example": "1",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "description": "Date and time when the notification was created",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-05-12 08:00:00"
+                    },
+                    "updated_at": {
+                        "description": "Date and time when the notification was last updated",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-05-12 08:30:00"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    }
+                },
+                "type": "object"
+            },
+            "Order": {
+                "title": "Order",
+                "description": "Order model",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "buyer_id": {
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "seller_id": {
+                        "type": "integer",
+                        "example": "2"
+                    },
+                    "product_id": {
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "total_amount": {
+                        "type": "number",
+                        "format": "float",
+                        "example": "25.99"
+                    },
+                    "order_status": {
+                        "type": "string",
+                        "enum": [
+                            "pending",
+                            "accepted",
+                            "rejected",
+                            "completed",
+                            "cancelled"
+                        ],
+                        "example": "pending"
+                    },
+                    "tracking_status": {
+                        "type": "string",
+                        "enum": [
+                            "order_placed",
+                            "preparing",
+                            "shipped",
+                            "in_transit",
+                            "delivered"
+                        ],
+                        "example": "order_placed"
+                    },
+                    "shipping_address": {
+                        "type": "string",
+                        "example": "123 Main St, City, State 12345"
+                    },
+                    "notes": {
+                        "type": "string",
+                        "example": "Please handle with care",
+                        "nullable": true
+                    },
+                    "accepted_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "shipped_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "delivered_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Payment": {
+                "title": "Payment",
+                "description": "Payment model",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "order_id": {
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "card_id": {
+                        "type": "integer",
+                        "example": "1",
+                        "nullable": true
+                    },
+                    "payment_method": {
+                        "type": "string",
+                        "enum": [
+                            "credit_card",
+                            "debit_card",
+                            "cash_on_delivery"
+                        ],
+                        "example": "credit_card"
+                    },
+                    "payment_status": {
+                        "type": "string",
+                        "enum": [
+                            "pending",
+                            "processing",
+                            "completed",
+                            "failed",
+                            "refunded"
+                        ],
+                        "example": "completed"
+                    },
+                    "payment_amount": {
+                        "type": "number",
+                        "format": "float",
+                        "example": "25.99"
+                    },
+                    "transaction_id": {
+                        "type": "string",
+                        "example": "txn_1234567890",
+                        "nullable": true
+                    },
+                    "payment_gateway_response": {
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "paid_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "PersonalAccessToken": {
+                "title": "PersonalAccessToken",
+                "description": "Personal Access Token model",
+                "properties": {
+                    "id": {
+                        "description": "Unique identifier for the personal access token",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "user_id": {
+                        "description": "User ID associated with the personal access token",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "token": {
+                        "description": "The access token",
+                        "type": "string",
+                        "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+                    },
+                    "last_used_at": {
+                        "description": "Date and time when the token was last used",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-05-12 05:00:00"
+                    },
+                    "expires_at": {
+                        "description": "Date and time when the token expires",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-06-12 05:00:00"
+                    },
+                    "created_at": {
+                        "description": "Date and time when the personal access token was created",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-05-12 04:00:00"
+                    },
+                    "updated_at": {
+                        "description": "Date and time when the personal access token was last updated",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-05-12 04:30:00"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    }
+                },
+                "type": "object"
+            },
+            "Product": {
+                "title": "Product",
+                "description": "Product model",
+                "properties": {
+                    "id": {
+                        "description": "Unique identifier for the product",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "name": {
+                        "description": "Name of the product",
+                        "type": "string",
+                        "example": "Smartphone"
+                    },
+                    "description": {
+                        "description": "Description of the product",
+                        "type": "string",
+                        "example": "A high-end smartphone with advanced features."
+                    },
+                    "price": {
+                        "description": "Price of the product",
+                        "type": "number",
+                        "format": "float",
+                        "example": "599.99"
+                    },
+                    "seller_id": {
+                        "description": "ID of the seller who listed the product",
+                        "type": "integer",
+                        "example": "5"
+                    },
+                    "buyer_id": {
+                        "description": "ID of the user who bought the product",
+                        "type": "integer",
+                        "example": "3",
+                        "nullable": true
+                    },
+                    "status": {
+                        "description": "Status of the product (selling, sold, bought)",
+                        "type": "string",
+                        "enum": [
+                            "selling",
+                            "sold",
+                            "bought"
+                        ],
+                        "example": "selling"
+                    },
+                    "category_id": {
+                        "description": "ID of the category this product belongs to",
+                        "type": "integer",
+                        "example": "3"
+                    },
+                    "image_url": {
+                        "description": "URL to the product image",
+                        "type": "string",
+                        "example": "https://example.com/images/smartphone.jpg"
+                    },
+                    "created_at": {
+                        "description": "Date and time when the product was created",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-05-12 03:00:00"
+                    },
+                    "updated_at": {
+                        "description": "Date and time when the product was last updated",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-05-12 03:30:00"
+                    },
+                    "year_of_publication": {
+                        "description": "Year the book was published",
+                        "type": "integer",
+                        "example": "2020"
+                    },
+                    "state_id": {
+                        "description": "ID of the book's condition state",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "author": {
+                        "description": "Author of the book",
+                        "type": "string",
+                        "example": "John Doe"
+                    }
+                },
+                "type": "object"
+            },
+            "Review": {
+                "title": "Review",
+                "description": "Review model",
+                "properties": {
+                    "id": {
+                        "description": "Unique identifier for the review",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "user_id": {
+                        "description": "User ID associated with the review",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "product_id": {
+                        "description": "Product ID associated with the review",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "rating": {
+                        "description": "Rating given in the review",
+                        "type": "integer",
+                        "example": "4"
+                    },
+                    "review": {
+                        "description": "Content of the review",
+                        "type": "string",
+                        "example": "This product is great!"
+                    },
+                    "created_at": {
+                        "description": "Date and time when the review was created",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-05-12 02:00:00"
+                    },
+                    "updated_at": {
+                        "description": "Date and time when the review was last updated",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-05-12 02:30:00"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "product": {
+                        "$ref": "#/components/schemas/Product"
+                    }
+                },
+                "type": "object"
+            },
+            "SavedSearch": {
+                "title": "SavedSearch",
+                "description": "SavedSearch model",
+                "properties": {
+                    "id": {
+                        "description": "Unique identifier for the saved search",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "user_id": {
+                        "description": "User ID associated with the saved search",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "search_query": {
+                        "description": "The search query string",
+                        "type": "string",
+                        "example": "javascript programming"
+                    },
+                    "search_name": {
+                        "description": "Custom name for the saved search (optional)",
+                        "type": "string",
+                        "example": "Programming Books",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "description": "Date and time when the search was saved",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-05-12 10:00:00"
+                    },
+                    "updated_at": {
+                        "description": "Date and time when the search was last updated",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-05-12 10:30:00"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    }
+                },
+                "type": "object"
+            },
+            "State": {
+                "title": "State",
+                "description": "Book state model",
+                "properties": {
+                    "id": {
+                        "description": "Unique identifier for the state",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "name": {
+                        "description": "Name of the book state",
+                        "type": "string",
+                        "example": "Good"
+                    },
+                    "description": {
+                        "description": "Description of the book state",
+                        "type": "string",
+                        "example": "Book shows signs of wear but is fully intact."
+                    }
+                },
+                "type": "object"
+            },
+            "Tier": {
+                "title": "Tier",
+                "description": "Tier model for subscription levels",
+                "properties": {
+                    "id": {
+                        "description": "Unique identifier for the tier",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "name": {
+                        "description": "Name of the tier",
+                        "type": "string",
+                        "example": "Premium"
+                    },
+                    "description": {
+                        "description": "Description of the tier",
+                        "type": "string",
+                        "example": "Premium subscription with advanced features"
+                    },
+                    "price": {
+                        "description": "Monthly price of the tier",
+                        "type": "number",
+                        "format": "float",
+                        "example": "19.99"
+                    },
+                    "max_listings": {
+                        "description": "Maximum number of listings allowed",
+                        "type": "integer",
+                        "example": "50"
+                    },
+                    "featured_listings": {
+                        "description": "Whether featured listings are allowed",
+                        "type": "boolean",
+                        "example": "true"
+                    },
+                    "priority_support": {
+                        "description": "Whether priority support is included",
+                        "type": "boolean",
+                        "example": "true"
+                    },
+                    "created_at": {
+                        "description": "Date and time when the tier was created",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-05-12 09:00:00"
+                    },
+                    "updated_at": {
+                        "description": "Date and time when the tier was last updated",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-05-12 09:30:00"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "title": "User",
+                "description": "User model",
+                "properties": {
+                    "id": {
+                        "description": "ID",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "full_name": {
+                        "description": "Full name",
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "description": "Email",
+                        "type": "string",
+                        "format": "email",
+                        "example": "johndoe@example.com"
+                    },
+                    "password": {
+                        "description": "Password (hashed)",
+                        "type": "string",
+                        "format": "password",
+                        "example": "$2y$10$..."
+                    },
+                    "phone_number": {
+                        "description": "Phone number",
+                        "type": "string",
+                        "example": "+1234567890",
+                        "nullable": true
+                    },
+                    "email_verified_at": {
+                        "description": "Email verification timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "description": "Creation timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Last update timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Wishlist": {
+                "title": "Wishlist",
+                "description": "Wishlist model",
+                "properties": {
+                    "id": {
+                        "description": "Unique identifier for the wishlist item",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "user_id": {
+                        "description": "User ID associated with the wishlist item",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "product_id": {
+                        "description": "Product ID associated with the wishlist item",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "created_at": {
+                        "description": "Date and time when the wishlist item was created",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-05-12 10:00:00"
+                    },
+                    "updated_at": {
+                        "description": "Date and time when the wishlist item was last updated",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-05-12 10:30:00"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "product": {
+                        "$ref": "#/components/schemas/Product"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Credit Cards",
+            "description": "API Endpoints for managing user credit cards"
+        },
+        {
+            "name": "Carts",
+            "description": "Operations about carts"
+        },
+        {
+            "name": "Categories",
+            "description": "Operations about categories"
+        },
+        {
+            "name": "Cities",
+            "description": "API Endpoints for managing cities"
+        },
+        {
+            "name": "Mailer",
+            "description": "Operations related to email sending"
+        },
+        {
+            "name": "Notifications",
+            "description": "Operations related to notifications"
+        },
+        {
+            "name": "Orders",
+            "description": "Operations related to orders/purchases"
+        },
+        {
+            "name": "Payments",
+            "description": "Operations related to payments"
+        },
+        {
+            "name": "Products",
+            "description": "Operations related to products"
+        },
+        {
+            "name": "Reviews",
+            "description": "Operations related to reviews"
+        },
+        {
+            "name": "SavedSearches",
+            "description": "Operations about saved searches"
+        },
+        {
+            "name": "States",
+            "description": "API Endpoints for Book States"
+        },
+        {
+            "name": "Tiers",
+            "description": "API Endpoints for subscription tiers"
+        },
+        {
+            "name": "Users",
+            "description": "API Endpoints for managing users"
+        },
+        {
+            "name": "Wishlist",
+            "description": "Operations about wishlist"
+        }
+    ]
+}

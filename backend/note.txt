@@ -1,0 +1,190 @@
+1.
+The Stranger 
+Albert Camus
+https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1738704267i/49552.jpg
+category 2
+state 1
+price 13
+
+2.
+The Myth of Sisyphus
+Albert Camus
+https://m.media-amazon.com/images/I/81abgIkXUHL._SL1500_.jpg
+category 2
+state 3
+price 20
+
+3.
+One Thousand and One Nights 
+ Hanan al-Shaykh
+https://m.media-amazon.com/images/I/81ANAMxZ3hL._SL1500_.jpg
+category 2
+state 2
+
+4.
+Faust
+johann wolfgang von goethe 
+https://m.media-amazon.com/images/I/71-qPW0UDgL._SL1000_.jpg
+category 2
+state 3
+
+5.
+The Little Prince 
+Antoine de Saint-Exupéry
+https://www.lepetitprince.com/wp-content/uploads/2023/01/COVER-Le-Petit-Prince-FR.jpg
+category 1
+state 1
+
+
+6.
+The Adventures of Huckleberry Finn
+Mark Twain
+https://d1pwnu15mzvjms.cloudfront.net/300x0/9781480475182.jpg?w=384
+category 1
+state 2
+
+7.
+The Adventures of Tom Sawyer
+Mark Twain
+https://www.ucpress.edu/_next/image?url=https%3A%2F%2Fwebfiles.ucpress.edu%2Fcoverimage%2Fisbn13%2F9780520343634.jpg&w=640&q=90
+category 1
+state 3
+
+
+8.
+The Ugly Duckling 
+Hans Christian Andersen
+https://m.media-amazon.com/images/I/A12VeN4BAEL._SL1500_.jpg
+category 1
+state 2
+
+
+9.
+Introduction to Quantum Mechanics 
+David J. Griffiths
+https://m.media-amazon.com/images/I/61HBnuFYo-L._SL1360_.jpg
+category 3
+state 1
+
+10.
+Introduction to Algorithms, 3rd Edition 
+Thomas H Cormen
+https://m.media-amazon.com/images/I/61Pgdn8Ys-L._SL1500_.jpg
+category 3
+state 2
+
+
+11.
+Calculus 
+James Stewart 
+https://m.media-amazon.com/images/I/91+VKdOPEVL._SL1500_.jpg
+category 3
+state 3
+
+
+12.
+Physics for Scientists and Engineers: A Strategic Approach 
+Randall D. Knight 
+https://m.media-amazon.com/images/I/61MiXKtT6cL._SL1000_.jpg
+category 3
+state 2
+
+
+12.
+Classical Mechanics 
+John R. Taylor
+https://m.media-amazon.com/images/I/611+R-vfzjL._SL1400_.jpg
+category 3
+state 1
+
+
+13.
+Cracking the Coding Interview: 189 Programming Questions and Solutions (Cracking the Interview & Career) 
+Gayle Laakmann McDowell 
+https://m.media-amazon.com/images/I/61mIq2iJUXL._SL1360_.jpg
+category 3
+state 2
+
+
+14.
+Python Crash Course, 3rd Edition: A Hands-On, Project-Based Introduction to Programming
+Eric Matthes
+https://m.media-amazon.com/images/I/81py-nCTfrL._SL1500_.jpg
+category 3
+state 2
+
+
+15.
+JavaScript: The Good Parts: The Good Parts
+Douglas Crockford
+https://m.media-amazon.com/images/I/7185IMvz88L._SL1500_.jpg
+category 3
+state 3
+
+
+16.
+Headway Intermediate Workbook without key 5th edition
+Liz Soars
+https://www.knjiga.ba/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/slike/headway_5th_edition_intermediate_wb.jpg
+category 2
+state 2
+
+
+17.
+Logika
+Gajo Petrović
+https://www.knjiga.ba/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/slike/logika_gajo_petrovic.jpg
+category 2
+state 3
+
+18.
+Poduzetništvo 1 - Udžbenik za 3, razred - zanimanje komercijalista/komercijalista
+Suzana Đurđević
+https://www.knjiga.ba/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/slike/poduzetnistvo_1_za_3_suzana.jpg
+category 2
+state 1
+
+
+19.
+Deutsch Lernen mit Hans und Greta - Deutsch fur Kinder
+Dušan Pavlić
+https://www.knjiga.ba/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/slike/deutsch_lernen_mit_hans_und_greta.jpg
+category 1
+state 3
+
+20.
+New English Adventure 2, Pupils Book + DVD
+Anne Worrall
+https://www.knjiga.ba/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/slike/new_english_adventure_2_pb.jpg
+category 1
+state 2
+
+21.
+Knjiga o matematici - Pustolovine u svijetu oblika i brojeva
+Anna Weltman
+https://www.knjiga.ba/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/slike/knjiga_o_matematici.jpg
+category 1
+state 2
+
+22.
+Fizika oko nas 9 - Udžbenik za fiziku u devetom razredu osnovne škole
+Vladimir Paar
+https://www.knjiga.ba/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/slike/fizika_oko_nas_9_udzbenik.jpg
+category 1
+state 3
+
+23.
+Tehnička kultura 7 - Udžbenik za sedmi razred devetogodišnje osnovne škole
+Ćamil Ahmetović
+https://www.knjiga.ba/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/slike/tehnicko_7.jpg
+category 1
+state 3
+
+
+24.
+Moja okolina 3 - Udžbenik za treći razred devetogodišnje škole
+Dijana Kovačević
+https://www.knjiga.ba/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/slike/moja_okolina_3_udzbenik.jpg
+category 1
+state 2
+

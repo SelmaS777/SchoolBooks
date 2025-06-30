@@ -1,0 +1,67 @@
+services:
+    laravel:
+        build:
+            context: ./vendor/laravel/sail/runtimes/8.3
+            dockerfile: Dockerfile
+            args:
+                WWWGROUP: '${WWWGROUP}'
+        image: sail-8.3/app
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        ports:
+            - '8081:80'
+            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+        environment:
+            WWWUSER: '${WWWUSER}'
+            LARAVEL_SAIL: 1
+            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+            IGNITION_LOCAL_SITES_PATH: '${PWD}'
+
+        volumes:
+            - '.:/var/www/html'
+        networks:
+            - sail
+        depends_on:
+            - postgresql
+
+    postgresql:
+        image: postgres:13
+        ports:
+            - '${FORWARD_DB_PORT:-5432}:5432'
+        environment:
+            POSTGRES_DB: '${DB_DATABASE}'
+            POSTGRES_USER: '${DB_USERNAME}'
+            POSTGRES_PASSWORD: '${DB_PASSWORD}'
+            POSTGRES_HOST: '${DB_HOST}'
+            POSTGRES_PORT: '${DB_PORT}'
+            POSTGRES_CONNECTION: '${DB_CONNECTION}'
+        volumes:
+            - 'sail-postgres:/var/lib/postgresql/data'
+        networks:
+            - sail
+
+    adminer:
+        image: adminer
+        ports:
+            - "${FORWARD_DB_PORT:-8080}:8080"
+        depends_on:
+            - postgresql
+        networks:
+            - sail
+        volumes:
+            - "./resources/css/custom-adminer.css:/var/www/html/adminer.css:ro"
+
+networks:
+    sail:
+        driver: bridge
+
+volumes:
+    sail-mysql:
+        driver: local
+    sail-postgres:
+        driver: local
+    sail-redis:
+        driver: local
+    sail-meilisearch:
+        driver: local
