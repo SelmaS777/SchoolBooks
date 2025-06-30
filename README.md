@@ -2,8 +2,9 @@
 
 > A modern Consumer-to-Consumer (C2C) web platform for buying and selling educational books across all academic levels.
 
-![schoolBooksLogoSDP (1)](https://github.com/user-attachments/assets/edccade6-44ad-455c-89c5-f67eb64a94f0)
-
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/edccade6-44ad-455c-89c5-f67eb64a94f0" alt="schoolBooksLogoSDP" width="300">
+</div>
 
 
 ## 🎯 Overview
