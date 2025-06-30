@@ -1,7 +1,8 @@
 # 📚 SchoolBooks - Educational Book Marketplace
 
 > A modern Consumer-to-Consumer (C2C) web platform for buying and selling educational books across all academic levels.
-![School Books White Logo with Orange Background](https://github.com/user-attachments/assets/e314e909-74e0-4048-8141-e3a3a7f6fc1e)
+![schoolBooksLogoSDP](https://github.com/user-attachments/assets/b8041dd6-5306-4af6-bac5-aec966d24291)
+
 
 ## 🎯 Overview
 
