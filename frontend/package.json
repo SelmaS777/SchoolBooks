@@ -38,7 +38,9 @@
     "selenium-webdriver": "^4.21.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.53.2",
     "@testing-library/jest-dom": "^6.4.6",
+    "@types/node": "^24.0.10",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^7.2.0",

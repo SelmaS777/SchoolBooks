@@ -353,7 +353,8 @@ const MainPage: React.FC = () => {
       <Container maxWidth="xl" sx={{ py: 4 }}>
         {/* Page Header */}
         <Box sx={{ mb: 4, textAlign: 'center' }}>
-          <Typography variant="h3" component="h1" sx={{ fontWeight: 'bold', mb: 1, color: '#FBFBFB' }}>
+          {/* Add data-testid attributes for testing */}
+          <Typography variant="h3" component="h1" sx={{ fontWeight: 'bold', mb: 1, color: '#FBFBFB' }} data-testid="welcome-message">
             Welcome back, {userName}!
           </Typography>
           <Typography variant="h6" sx={{ mb: 3, color: '#FBFBFB' }}>
