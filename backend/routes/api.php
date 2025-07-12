@@ -11,24 +11,47 @@
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $requeuse OTPHP\TOTP;st->user();
-// });
+use Illuminate\Support\Facades\Route;
 
-require_once 'api/auth.api.php';
-require_once 'api/test.api.php';
-require_once 'api/mailer.api.php';
-require_once 'api/user.api.php';
-require_once 'api/cart.api.php';
-require_once 'api/category.api.php';
-require_once 'api/order.api.php';
-require_once 'api/product.api.php';
-require_once 'api/payment.api.php';
-require_once 'api/review.api.php';
-require_once 'api/state.api.php';
-require_once 'api/city.api.php';
-require_once 'api/notification.api.php';
-require_once 'api/tier.api.php';
-require_once 'api/card.api.php';
-require_once 'api/wishlist.api.php';
-require_once 'api/savedsearch.api.php';
+// Test route to verify API is working
+Route::get('/', function () {
+    return response()->json([
+        'message' => 'SchoolBooks API is working!',
+        'version' => '1.0',
+        'status' => 'success'
+    ]);
+});
+
+$basePath = __DIR__ . '/api/';
+
+$routeFiles = [
+    'auth.api.php',
+    'test.api.php',
+    'mailer.api.php',
+    'user.api.php',
+    'cart.api.php',
+    'category.api.php',
+    'order.api.php',
+    'product.api.php',
+    'payment.api.php',
+    'review.api.php',
+    'state.api.php',
+    'city.api.php',
+    'notification.api.php',
+    'tier.api.php',
+    'card.api.php',
+    'wishlist.api.php',
+    'savedsearch.api.php'
+];
+
+foreach ($routeFiles as $file) {
+    $fullPath = $basePath . $file;
+    if (file_exists($fullPath)) {
+        require_once $fullPath;
+    } else {
+        // Log missing files in production for debugging
+        if (app()->environment('production')) {
+            \Log::warning("Route file not found: " . $fullPath);
+        }
+    }
+}
