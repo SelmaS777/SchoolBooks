@@ -17,7 +17,23 @@ ENV LOG_CHANNEL stderr
 # Allow composer to run as root
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
-# Install node and npm for Vite
+# Install PostgreSQL PDO extension
+RUN apk add --no-cache postgresql-dev \
+    && docker-php-ext-install pdo_pgsql
+
+# Install node and npm for Vite (if needed)
 RUN apk add --update nodejs npm
+
+# Install composer dependencies
+RUN composer install --optimize-autoloader --no-dev
+
+# Run Laravel optimizations
+RUN php artisan config:cache || true
+RUN php artisan route:cache || true
+RUN php artisan view:cache || true
+
+# Set proper permissions
+RUN chown -R nginx:nginx /var/www/html
+RUN chmod -R 755 /var/www/html/storage
 
 CMD ["/start.sh"]
